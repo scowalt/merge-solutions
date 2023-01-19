@@ -18,7 +18,7 @@ jobs:
         run: msbuild /p:Configuration=${{ matrix.configuration }}
       - name: Publish artifacts
         # In the future, maybe we can be smarter about this and only publish artifacts when the version changes
-        # if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
+        if: ${{ matrix.configuration == 'Release' }} # && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
         uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
@@ -26,3 +26,14 @@ jobs:
           path: |
             merge-solutions\bin\Release\*.exe
             merge-solutions\bin\Release\*.pdb
+      # Create a release on Github
+      - name: Create Github release
+        if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
