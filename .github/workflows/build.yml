@@ -1,0 +1,38 @@
+name: Build
+on: [push, pull_request]
+
+jobs:
+  build:
+    # matrix for both release and debug builds
+    strategy:
+      matrix:
+        configuration: [Release, Debug]
+
+    runs-on: windows-2019 # need older VM for .NETFramwork v4.0
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.1 # Need msbuild (not dotnet) for .net framework
+      # TODO, build both release and debug, but only publish release
+      - name: Build (${{ matrix.configuration }} flavor)
+        run: msbuild /p:Configuration=${{ matrix.configuration }}
+      - name: Publish artifacts
+        # In the future, maybe we can be smarter about this and only publish artifacts when the version changes
+        if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
+          if-no-files-found: error
+          path: |
+            merge-solutions\bin\Release\*.exe
+            merge-solutions\bin\Release\*.pdb
+      - name: Create Github release
+        if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          release_name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
+          draft: false
+          prerelease: false
