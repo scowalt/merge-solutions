@@ -19,9 +19,10 @@ jobs:
       - name: Publish artifacts
         # In the future, maybe we can be smarter about this and only publish artifacts when the version changes
         # if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
+          if-no-files-found: error
           path: |
-            ${{ github.event.repository.name }}\merge-solutions\merge-solutions\bin\Release\*.exe
-            ${{ github.event.repository.name }}\merge-solutions\merge-solutions\bin\Release\*.pdb
+            ${{ github.event.repository.name }}\merge-solutions\bin\Release\merge-solutions.exe
+            ${{ github.event.repository.name }}\merge-solutions\bin\Release\merge-solutions.pdb
