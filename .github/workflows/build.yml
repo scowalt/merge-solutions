@@ -24,5 +24,5 @@ jobs:
           name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
           if-no-files-found: error
           path: |
-            ${{ github.event.repository.name }}\merge-solutions\bin\Release\merge-solutions.exe
-            ${{ github.event.repository.name }}\merge-solutions\bin\Release\merge-solutions.pdb
+            merge-solutions\bin\Release\*.exe
+            merge-solutions\bin\Release\*.pdb
