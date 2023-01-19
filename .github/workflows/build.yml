@@ -21,8 +21,9 @@ jobs:
         if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
         with:
           name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
+          fail_on_unmatched_files: true
           files: |
-            merge-solutions\bin\Release\*.exe
-            merge-solutions\bin\Release\*.pdb
+            merge-solutions\bin\Release\merge-solutions.exe
+            merge-solutions\bin\Release\merge-solutions.pdb
 permissions:
   contents: write # for create-release
