@@ -16,19 +16,9 @@ jobs:
       # TODO, build both release and debug, but only publish release
       - name: Build (${{ matrix.configuration }} flavor)
         run: msbuild /p:Configuration=${{ matrix.configuration }}
-      - name: Publish artifacts
-        # In the future, maybe we can be smarter about this and only publish artifacts when the version changes
-        if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
-          if-no-files-found: error
-          path: |
-            merge-solutions\bin\Release\*.exe
-            merge-solutions\bin\Release\*.pdb
-      - name: Release
+      - name: Publish Github release
         uses: softprops/action-gh-release@v1
-        if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
+        if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') }}
         with:
           name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
           files: |
