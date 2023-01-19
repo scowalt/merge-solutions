@@ -26,16 +26,13 @@ jobs:
           path: |
             merge-solutions\bin\Release\*.exe
             merge-solutions\bin\Release\*.pdb
-      - name: Create Github release
+      - name: Release
+        uses: softprops/action-gh-release@v1
         if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
-        uses: actions/create-release@v1 # TODO - this is deprecated
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          release_name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
-
+          name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
+          files: |
+            merge-solutions\bin\Release\*.exe
+            merge-solutions\bin\Release\*.pdb
 permissions:
   contents: write # for create-release
