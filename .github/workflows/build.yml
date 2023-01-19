@@ -28,7 +28,7 @@ jobs:
             merge-solutions\bin\Release\*.pdb
       - name: Create Github release
         if: ${{ matrix.configuration == 'Release' && github.event_name == 'push' && github.ref == 'refs/heads/scowalt/master' }}
-        uses: actions/create-release@v1
+        uses: actions/create-release@v1 # TODO - this is deprecated
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
