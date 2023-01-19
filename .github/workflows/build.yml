@@ -14,7 +14,7 @@ jobs:
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v1.1 # Need msbuild (not dotnet) for .net framework
       # TODO, build both release and debug, but only publish release
-      - name: Build release
+      - name: Build (${{ matrix.configuration }} flavor)
         run: msbuild /p:Configuration=${{ matrix.configuration }}
       - name: Get product version
         id: version
