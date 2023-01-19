@@ -22,8 +22,6 @@ jobs:
         with:
           name: ${{ github.event.repository.name }} v1.0.${{ github.run_number }}
           fail_on_unmatched_files: true
-          files: |
-            merge-solutions\bin\Release\merge-solutions.exe
-            merge-solutions\bin\Release\merge-solutions.pdb
+          files: merge-solutions/bin/Release/*
 permissions:
   contents: write # for create-release
